@@ -1,3 +1,7 @@
+<script setup>
+import { ref } from "vue";
+const menuOpen = ref(false);
+</script>
 <template>
     <nav class="bg-gray-800">
         <div class="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -125,6 +129,7 @@
                                 id="user-menu-button"
                                 aria-expanded="false"
                                 aria-haspopup="true"
+                                @click="menuOpen = !menuOpen"
                             >
                                 <span class="absolute -inset-1.5"></span>
                                 <span class="sr-only">Open user menu</span>
@@ -152,6 +157,7 @@
                             aria-orientation="vertical"
                             aria-labelledby="user-menu-button"
                             tabindex="-1"
+                            v-if="menuOpen"
                         >
                             <!-- Active: "bg-gray-100", Not Active: "" -->
                             <a
