@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { useAudioPlayer } from "../../Composables/audioPlayer";
+
 const { requestPlay } = useAudioPlayer();
 const { track } = defineProps({
     track: {
@@ -8,22 +8,37 @@ const { track } = defineProps({
         required: true,
     },
 });
-const url = "storage/" + track.music;
+const url = "/storage/" + track.music;
 const audio = new Audio(url);
 </script>
 
 <template>
-    <div class="flex items-center justify-between p-3 bg-slate-200">
-        <img class="w-16" :src="'storage/' + track.image" :alt="track.title" />
-        <div>
-            <h2>{{ track.title }}</h2>
-            <p>{{ track.artist }}</p>
+    <div
+        class="flex gap-4 justify-between items-center px-6 py-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+    >
+        <div
+            class="w-24 h-24 bg-white rounded-lg bg-center bg-cover"
+            :style="'background-image: url(/storage/' + track.image + ')'"
+            :alt="track.title"
+        />
+        <div class="flex-1">
+            <h5
+                class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+                {{ track.title }}
+            </h5>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                {{ track.artist }}
+            </p>
         </div>
-        <button
-            @click="requestPlay(audio)"
-            class="text-white bg-blue-600 text-wrap"
-        >
-            play !
-        </button>
+        <div class="flex items-center gap-4">
+            <slot name="controls" :track></slot>
+            <button
+                @click="requestPlay(audio)"
+                class="w-8 aspect-square text-sm font-medium text-center text-white rounded-full shadow-lg bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80"
+            >
+                <i class="mdi mdi-play"></i>
+            </button>
+        </div>
     </div>
 </template>

@@ -19,4 +19,13 @@ class Track extends Model
         'play_count',
         'album',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
+     public function playlists() {
+        return $this->belongsToMany(Playlist::class);
+    }
 }
