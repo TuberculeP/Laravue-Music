@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\ApiPlaylistController;
+use App\Http\Middleware\CheckAPIKey;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::get('/playlists', [ApiPlaylistController::class, 'index'])->middleware(CheckAPIKey::class);

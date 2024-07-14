@@ -31,10 +31,10 @@ const filteredTracks = computed<any[] | undefined>(() => {
         <template #title>
             <div class="flex gap-2">
                 <i class="mdi mdi-music"></i>
-                <h1>My tracks</h1>
+                <h1>Available tracks</h1>
             </div>
         </template>
-        <template #action>
+        <template #action v-if="page.props.isAdmin">
             <Link
                 class="flex gap-2 flowbite_button_blue"
                 :href="route('tracks.create')"

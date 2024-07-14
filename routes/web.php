@@ -1,20 +1,14 @@
 <?php
 
+use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\TrackController;
+use App\Http\Middleware\IsAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
+/*
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -24,6 +18,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+*/
 
 /*
 Route::name('tracks')
@@ -39,7 +34,10 @@ Route::name('tracks')
 });
 */
 
-Route::resource('tracks', TrackController::class);
+Route::middleware(IsAdmin::class)
+    ->resource('tracks', TrackController::class)
+    ->except('index');
+Route::get('tracks', [TrackController::class, 'index'])->name('tracks.index');
 
 Route::middleware([
     'auth:sanctum',
@@ -47,5 +45,17 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::resource('playlists', PlaylistController::class);
+    Route::resource('api-keys', ApiKeyController::class);
 });
 
+Route::get('/', function () {
+    return redirect()->route('tracks.index');
+    /*
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+    */
+});

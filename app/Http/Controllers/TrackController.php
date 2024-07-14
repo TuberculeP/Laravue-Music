@@ -15,7 +15,8 @@ class TrackController extends Controller
      */
     public function index()
     {
-        $tracks = Track::all();
+        if (auth()->user()?->admin) $tracks = Track::all();
+        else $tracks = Track::where('visible', true)->get();
         return Inertia::render('Track/Index', [
             'tracks' => $tracks,
         ]);

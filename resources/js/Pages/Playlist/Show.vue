@@ -18,13 +18,26 @@ const tracks = page.props.tracks;
             <h1>{{ playlistDetails.title }}</h1>
         </template>
         <template #action>
-            <Link
-                class="flowbite_button_blue flex gap-2"
-                :href="route('playlists.index')"
-            >
-                <i class="mdi mdi-arrow-left"></i>
-                <p>Back to list</p>
-            </Link>
+            <div class="flex gap-2">
+                <Link
+                    class="flowbite_button_blue flex gap-2"
+                    :href="
+                        route('playlists.edit', {
+                            playlist: page.props.playlist,
+                        })
+                    "
+                >
+                    <i class="mdi mdi-pencil"></i>
+                    <p>Edit playlist</p>
+                </Link>
+                <Link
+                    class="flowbite_button_blue flex gap-2"
+                    :href="route('playlists.index')"
+                >
+                    <i class="mdi mdi-arrow-left"></i>
+                    <p>Back to list</p>
+                </Link>
+            </div>
         </template>
         <template #content>
             <TrackList :tracks="tracks">

@@ -223,7 +223,7 @@ const logout = () => {
                             </ResponsiveNavLink>
 
                             <!-- Authentication -->
-                            <form method="POST" @submit.prevent="logout">
+                            <form method="POST" @submit.prevent="logout" as="button">
                                 <ResponsiveNavLink as="button">
                                     Log Out
                                 </ResponsiveNavLink>

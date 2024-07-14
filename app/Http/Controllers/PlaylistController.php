@@ -31,7 +31,7 @@ class PlaylistController extends Controller
      */
     public function create()
     {
-        $tracks = Track::all();
+        $tracks = Track::where('visible', true)->get();
         return Inertia::render('Playlist/Create', [
             'tracks' => $tracks,
         ]);
@@ -80,24 +80,50 @@ class PlaylistController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Playlist $playlist)
     {
-        //
+        $tracks = Track::where('visible', true)->get();
+        return Inertia::render('Playlist/Edit', [
+            'playlist' => $playlist->load(['tracks' => function ($query) {
+                $query->select('tracks.id', 'tracks.uuid');
+            }]),
+            'tracks' => $tracks,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Playlist $playlist)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string', 'min:5', 'max:255'],
+            'tracks' => 'array',
+            'tracks.*' => ['required', 'string'],
+        ]);
+
+        $tracks = Track::whereIn('uuid', $request->tracks)->get();
+
+        if ($tracks->count() !== count($request->tracks)) {
+            throw ValidationException::withMessages(['tracks' => 'One or more tracks does not exist.']);
+        }
+
+        $playlist->update([
+            'title' => $request->title,
+        ]);
+        // attach ça push, detach ça pop et sync ça replace
+        $playlist->tracks()->sync($tracks->pluck('id'));
+
+        $playlist->save();
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Playlist $playlist)
     {
-        //
+        $playlist->tracks()->detach();
+        $playlist->delete();
     }
 }

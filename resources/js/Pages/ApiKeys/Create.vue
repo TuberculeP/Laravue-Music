@@ -1,26 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import MusicLayout from "../../Layouts/MusicLayout.vue";
-import TrackListItem from "../../Components/Track/TrackListItem.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 
 const form = useForm({
-    title: null,
-    tracks: [],
+    name: null,
 });
 
-const page = usePage<{
-    tracks: any[];
-}>();
-
-const tracks = computed(() => page.props.tracks);
-
 function submit() {
-    form.post(route("playlists.store"), {
+    form.post(route("api-keys.store"), {
         preserveState: false,
         preserveScroll: true,
         onSuccess: () => {
             console.log("uploaded");
+            route("api-keys.index");
         },
     });
 }
@@ -29,12 +21,12 @@ function submit() {
 <template>
     <MusicLayout>
         <template #title>
-            <h1>Create a new playlist</h1>
+            <h1>Create a new API Key</h1>
         </template>
         <template #action>
             <Link
                 class="flowbite_button_blue flex gap-2"
-                :href="route('playlists.index')"
+                :href="route('api-keys.index')"
             >
                 <i class="mdi mdi-arrow-left"></i>
                 <p>Back to list</p>
@@ -43,25 +35,13 @@ function submit() {
         <template #content>
             <form @submit.prevent="submit" class="max-w-xl">
                 <div class="flowbite_form_section group">
-                    <label for="title">Title</label>
+                    <label for="title">Name</label>
                     <input
                         class="peer"
-                        v-model="form.title"
+                        v-model="form.name"
                         type="text"
                         id="title"
                     />
-                </div>
-                <div v-for="track in tracks" :key="track.uuid">
-                    <div class="flex items-center gap-6 max-h-screen">
-                        <input
-                            type="checkbox"
-                            name=""
-                            id=""
-                            :value="track.uuid"
-                            v-model="form.tracks"
-                        />
-                        <TrackListItem :track="track" :with-controls="false" />
-                    </div>
                 </div>
                 <button
                     :disabled="form.processing"
@@ -73,7 +53,7 @@ function submit() {
                     ]"
                     type="submit"
                 >
-                    Submit
+                    Create
                 </button>
             </form>
         </template>

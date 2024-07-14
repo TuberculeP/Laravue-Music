@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { usePage } from "@inertiajs/vue3";
 import { useAudioPlayer } from "../../Composables/audioPlayer";
 
 const { requestPlay } = useAudioPlayer();
@@ -8,14 +9,16 @@ const { track } = defineProps({
         required: true,
     },
 });
+
 const url = "/storage/" + track.music;
 const audio = new Audio(url);
 </script>
 
 <template>
     <div
-        class="flex gap-4 justify-between items-center px-6 py-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-    >
+        class="flex gap-4 justify-between items-center px-6 py-3 border rounded-lg shadow border-gray-700"
+        :class="[!track.visible ? 'bg-gray-900 border-dashed' : 'bg-gray-800']"
+        >
         <div
             class="w-24 h-24 bg-white rounded-lg bg-center bg-cover"
             :style="'background-image: url(/storage/' + track.image + ')'"

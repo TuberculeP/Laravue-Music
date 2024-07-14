@@ -1,34 +1,31 @@
 <script setup lang="ts">
 import MusicLayout from "../../Layouts/MusicLayout.vue";
-import TrackListItem from "../../Components/Track/TrackListItem.vue";
-import { ref, computed } from "vue";
-import { useAudioPlayer } from "../../Composables/audioPlayer";
 import { usePage } from "@inertiajs/vue3";
 import moment from "moment";
+import { computed } from "vue";
 
 const page = usePage<{
-    playlists: any[];
+    apiKeys: any[];
 }>();
 
-const playlists = computed(() => page.props.playlists);
-console.log(playlists);
+const apiKeys = computed(() => page.props.apiKeys);
 </script>
 
 <template>
     <MusicLayout>
         <template #title>
             <div class="flex gap-2">
-                <i class="mdi mdi-folder"></i>
-                <h1>My playlists</h1>
+                <i class="mdi mdi-key"></i>
+                <h1>My API Keys</h1>
             </div>
         </template>
         <template #action>
             <Link
                 class="flex gap-2 flowbite_button_blue"
-                :href="route('playlists.create')"
+                :href="route('api-keys.create')"
             >
                 <i class="mdi mdi-plus-circle"></i>
-                <p>Add playlist</p>
+                <p>Add API Key</p>
             </Link>
         </template>
         <template #content>
@@ -40,8 +37,8 @@ console.log(playlists);
                 >
                     <tr>
                         <th scope="col" class="px-6 py-3">#</th>
-                        <th scope="col" class="px-6 py-3">Title</th>
-                        <th scope="col" class="px-6 py-3">Tracks</th>
+                        <th scope="col" class="px-6 py-3">Name</th>
+                        <th scope="col" class="px-6 py-3">Key</th>
                         <th scope="col" class="px-6 py-3">Created at</th>
                         <th scope="col" class="px-6 py-3">Actions</th>
                     </tr>
@@ -49,8 +46,8 @@ console.log(playlists);
                 <tbody>
                     <tr
                         class="border-b dark:border-gray-700"
-                        v-for="(playlist, idx) in playlists"
-                        :key="playlist.uuid"
+                        v-for="(apiKey, idx) in apiKeys"
+                        :key="apiKey.uuid"
                     >
                         <td scope="row" class="px-6 py-4">
                             {{ idx + 1 }}
@@ -58,25 +55,25 @@ console.log(playlists);
                         <th
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                         >
-                            {{ playlist.title }}
+                            {{ apiKey.name }}
                         </th>
-                        <td class="px-6 py-4">{{ playlist.tracks_count }}</td>
+                        <td class="px-6 py-4">{{ apiKey.key }}</td>
                         <td class="px-6 py-4">
                             {{
-                                moment(playlist.created_at).format(
+                                moment(apiKey.created_at).format(
                                     "MM/DD/YYYY hh:mm:ss"
                                 )
                             }}
-                            ({{ moment(playlist.created_at).fromNow() }})
+                            ({{ moment(apiKey.created_at).fromNow() }})
                         </td>
                         <td class="px-6 py-4 flex gap-3">
-                            <Link :href="route('playlists.show', { playlist })">
-                                <i class="mdi mdi-eye text-gray-100"></i>
-                            </Link>
                             <Link
-                                :href="route('playlists.destroy', { playlist })"
+                                :href="
+                                    route('api-keys.destroy', {
+                                        api_key: apiKey,
+                                    })
+                                "
                                 method="delete"
-                                as="button"
                             >
                                 <i class="mdi mdi-delete text-red-400"></i>
                             </Link>
